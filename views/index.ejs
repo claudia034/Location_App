@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Location App</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/script.js" defer></script>
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDOs242tgtyWsjr14MXU8YxLM6y80r4Dfk&callback=initMap&v=weekly&libraries=marker"
+        defer>
+    </script>
+    <script id="locations-data" type="application/json">
+        <%= JSON.stringify(locations) %>
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            initMap();
+        });
+    </script>
+    
+</head>
+
+<body>
+    <h1>Location App</h1>
+    <form action="/add-location" method="post">
+        <input type="text" name="name" placeholder="Building/Location Name" required>
+        <input type="text" name="address" id="address" placeholder="Address (auto-filled)" required readonly>
+        <input type="hidden" name="latitude" id="latitude" required>
+        <input type="hidden" name="longitude" id="longitude" required>
+        <button type="submit">Add Location</button>
+    </form>
+
+    <div id="map"></div>
+
+    <h2>Locations List</h2>
+    <ul>
+        <% locations.forEach((location, index)=> { %>
+            <li>
+                <strong>
+                    <%= location.name %>
+                </strong>:
+                <%= location.address %>
+                    (Lat: <%= location.latitude %>, Long: <%= location.longitude %>)
+                            <form action="/update-location" method="post" style="display:inline;">
+                                <input type="hidden" name="index" value="<%= index %>">
+                                <input type="text" name="newName" placeholder="New Name" required>
+                                <button type="submit">Update</button>
+                            </form>
+            </li>
+            <% }) %>
+    </ul>
+</body>
+
+</html>
